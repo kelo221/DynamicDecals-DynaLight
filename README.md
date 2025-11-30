@@ -1,5 +1,7 @@
 # Dynamic Decals by Llockham-Industries
 
+Added support for [Henry's Dynamic Lighting](https://github.com/Henry00IS/DynamicLighting)
+
 [Unity Forums](https://forum.unity.com/threads/released-dynamic-decals.450820/) | [Getting Started](https://github.com/EricFreeman/DynamicDecals/blob/master/Assets/!Getting%20Started.pdf) | [Masking](https://github.com/EricFreeman/DynamicDecals/blob/master/Assets/1%20Masking.pdf) | [Pooling](https://github.com/EricFreeman/DynamicDecals/blob/master/Assets/2%20Pooling.pdf) | [Printers](https://github.com/EricFreeman/DynamicDecals/blob/master/Assets/3%20Printers.pdf) | [Modifiers](https://github.com/EricFreeman/DynamicDecals/blob/master/Assets/4%20Modifiers.pdf) | [Positioners](https://github.com/EricFreeman/DynamicDecals/blob/master/Assets/5%20Positioners.pdf) | [Optimizing Build Times](https://github.com/EricFreeman/DynamicDecals/blob/master/Assets/6%20Optimizing%20Build%20Times.pdf) | [Custom Decal Types](https://github.com/EricFreeman/DynamicDecals/blob/master/Assets/7%20Custom%20Decal%20Types.pdf)
 
 This solution was developed by Llockham-Industries and originally sold in the Unity Asset Store. Dynamic Decals was deprecated when the new Unity render pipeline was launched, but the original author [gave their permission](https://forum.unity.com/threads/released-dynamic-decals.450820/page-17#post-6814172) to open source the project as it still works for Unity's Built-in Render Pipeline.
