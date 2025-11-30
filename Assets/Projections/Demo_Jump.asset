@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -22,30 +23,32 @@ MonoBehaviour:
   maskMethod: 0
   masks: 00000000
   projectionLimit: 80
-  _Cutoff: 5
-  _TilingOffset: 282
-  _MaskBase: 283
-  _MaskLayers: 284
+  pixelMode: 1
+  _Cutoff: 227
+  _TilingOffset: 884
+  _MaskBase: 885
+  _MaskLayers: 886
+  _PixelMode: 887
   albedo:
     texture: {fileID: 2800000, guid: eb380a1300a6ef54897ebc80fb1d7c1b, type: 3}
     color: {r: 0.14076485, g: 0.09980536, b: 0.19117647, a: 1}
-    _MainTex: 1
-    _Color: 10
+    _MainTex: 7
+    _Color: 181
   metallic:
     texture: {fileID: 0}
     metallicity: 0.5
     glossiness: 1
-    _MetallicGlossMap: 238
-    _Metallic: 247
-    _Glossiness: 244
+    _MetallicGlossMap: 422
+    _Metallic: 421
+    _Glossiness: 418
   normal:
     texture: {fileID: 0}
     strength: 1
-    _BumpMap: 6
-    _BumpScale: 241
+    _BumpMap: 264
+    _BumpScale: 428
   emissive:
     texture: {fileID: 0}
     color: {r: 0, g: 0, b: 0, a: 1}
     intensity: 1
-    _EmissionMap: 237
-    _EmissionColor: 81
+    _EmissionMap: 442
+    _EmissionColor: 69

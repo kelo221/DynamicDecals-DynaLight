@@ -457,6 +457,9 @@ namespace LlockhamIndustries.Decals
             //Update and apply our material property block
             for (int i = 0; i < Local.Length; i++)
             {
+                //Safety check
+                if (i >= Global.Length) break;
+
                 if (Local[i].type == PropertyType.Float)
                 {
                     float value = (Local[i].enabled) ? Local[i].value : Global[i].value;

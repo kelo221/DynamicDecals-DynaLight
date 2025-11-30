@@ -33,12 +33,12 @@ namespace LlockhamIndustries.Misc
                 //Grab rigidbody
                 Rigidbody rigidbody = contact.otherCollider.GetComponent<Rigidbody>();
 
-                if (rigidbody != null && rigidbody.velocity.magnitude > chunkVelocity && triggerLayers.Contains(rigidbody.gameObject.layer))
+                if (rigidbody != null && rigidbody.linearVelocity.magnitude > chunkVelocity && triggerLayers.Contains(rigidbody.gameObject.layer))
                 {
-                    if (rigidbody.velocity.magnitude > chunkVelocity && Vector3.Angle(rigidbody.velocity, contact.normal) < chunkAngle)
+                    if (rigidbody.linearVelocity.magnitude > chunkVelocity && Vector3.Angle(rigidbody.linearVelocity, contact.normal) < chunkAngle)
                     {
                         //Trigger chunkdoll
-                        TriggerChunkdoll(rigidbody.mass, rigidbody.velocity);
+                        TriggerChunkdoll(rigidbody.mass, rigidbody.linearVelocity);
 
                         //Grab first chunk
                         Transform chunk = chunkdoll.transform.GetChild(0);
@@ -47,10 +47,10 @@ namespace LlockhamIndustries.Misc
                         SpawnParticles(chunkParticles, contact.point, contact.normal, chunk);
                         return;
                     }
-                    if (rigidbody.velocity.magnitude > ragVelocity)
+                    if (rigidbody.linearVelocity.magnitude > ragVelocity)
                     {
                         //Trigger ragdoll
-                        TriggerRagdoll(rigidbody.mass, rigidbody.velocity);
+                        TriggerRagdoll(rigidbody.mass, rigidbody.linearVelocity);
 
                         //Spawn & play particles
                         SpawnParticles(ragParticles, contact.point, contact.normal, ragdoll.transform);
@@ -145,7 +145,7 @@ namespace LlockhamIndustries.Misc
         private void SetVelocityRecursively(Transform Transform, Vector3 Velocity)
         {
             Rigidbody rigidbody = Transform.GetComponent<Rigidbody>();
-            if (rigidbody != null) rigidbody.velocity += Vector3.Slerp(Velocity , Random.rotationUniform.eulerAngles, 0.1f);
+            if (rigidbody != null) rigidbody.linearVelocity += Vector3.Slerp(Velocity , Random.rotationUniform.eulerAngles, 0.1f);
 
             foreach (Transform child in Transform)
             {

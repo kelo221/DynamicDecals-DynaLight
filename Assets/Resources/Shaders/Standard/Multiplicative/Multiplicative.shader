@@ -12,6 +12,8 @@
 
 		_MaskBase("Mask Base", Range(0.0, 1.0)) = 0.0
 		_MaskLayers("Layers", Color) = (0.5, 0.5, 0.5, 0.5)
+		
+		[Toggle]_PixelMode ("Pixel Mode", Float) = 0
 	}
 
 	//2.5
@@ -28,7 +30,7 @@
 			Blend DstColor Zero
 
 			CGPROGRAM
-			#pragma target 2.5
+			#pragma target 4.5
 			#pragma multi_compile_instancing
 			#pragma multi_compile_fwdbase
 			#pragma multi_compile_fog
@@ -38,6 +40,8 @@
 			#pragma multi_compile _ _AlphaTest
 			#pragma multi_compile ___ _Omni
 
+			#include "UnityCG.cginc"
+			#include_with_pragmas "Packages/de.alpacait.dynamiclighting/AlpacaIT.DynamicLighting/Shaders/DynamicLighting.cginc"
 			#include "../../Cginc/ForwardPasses.cginc"
 
 			#pragma vertex vertProjection

@@ -111,7 +111,7 @@ namespace LlockhamIndustries.Decals
 
                     //Calculate our rotation
                     Vector3 rot;
-                    if (rotationSource == RotationSource.Velocity && GetComponent<Rigidbody>().velocity != Vector3.zero) rot = GetComponent<Rigidbody>().velocity.normalized;
+                    if (rotationSource == RotationSource.Velocity && GetComponent<Rigidbody>().linearVelocity != Vector3.zero) rot = GetComponent<Rigidbody>().linearVelocity.normalized;
                     else if (rotationSource == RotationSource.Random) rot = Random.insideUnitSphere.normalized;
                     else rot = Vector3.up;
 

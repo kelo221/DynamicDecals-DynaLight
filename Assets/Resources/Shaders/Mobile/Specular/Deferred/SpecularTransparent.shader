@@ -38,7 +38,7 @@
 			Blend SrcAlpha OneMinusSrcAlpha, Zero One
 
 			CGPROGRAM
-			#pragma target 3.0
+			#pragma target 4.5
 			#pragma multi_compile_instancing
 			#pragma exclude_renderers nomrt
 			#pragma glsl
@@ -68,7 +68,7 @@
 			BlendOp 3 Max
 
 			CGPROGRAM
-			#pragma target 3.0
+			#pragma target 4.5
 			#pragma multi_compile_instancing
 			#pragma exclude_renderers nomrt
 			#pragma glsl

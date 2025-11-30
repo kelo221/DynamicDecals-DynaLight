@@ -50,7 +50,7 @@ namespace LlockhamIndustries.Decals
                 proj = ((GameObject)Instantiate(projection.gameObject, DynamicDecals.System.DefaultPool.Parent)).GetComponent<ProjectionRenderer>();
                 proj.name = "Positioned Projection";
             }
-            else Debug.LogWarning("Positioner has no projection to position.");
+            else UnityEngine.Debug.LogWarning("Positioner has no projection to position.");
             
         }
 

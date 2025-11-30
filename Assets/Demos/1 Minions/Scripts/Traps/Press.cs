@@ -31,7 +31,7 @@ namespace LlockhamIndustries.Misc
         }
         private void FixedUpdate()
         {
-            if (Vector3.Distance(press.transform.localPosition, goalPosition) > 0.01f || press.velocity.magnitude > 0.001f)
+            if (Vector3.Distance(press.transform.localPosition, goalPosition) > 0.01f || press.linearVelocity.magnitude > 0.001f)
             {
                 //Calculate velocity
                 Vector3 velocity = (goalPosition - press.transform.localPosition) / Time.fixedDeltaTime;
@@ -43,10 +43,10 @@ namespace LlockhamIndustries.Misc
                 velocity = transform.TransformDirection(velocity);
 
                 //Clamp velocity by acceleration
-                velocity = Vector3.MoveTowards(press.velocity, velocity, loopAcceleration);
+                velocity = Vector3.MoveTowards(press.linearVelocity, velocity, loopAcceleration);
 
                 //Set velocity
-                press.velocity = velocity;
+                press.linearVelocity = velocity;
             }
         }
 
@@ -61,7 +61,7 @@ namespace LlockhamIndustries.Misc
             float timeHeld = 0;
             while (timeHeld < triggeredDuration )
             {
-                if (Vector3.Distance(press.transform.localPosition, goalPosition) < 0.01f && press.velocity.magnitude < 0.001f) timeHeld += Time.fixedDeltaTime;
+                if (Vector3.Distance(press.transform.localPosition, goalPosition) < 0.01f && press.linearVelocity.magnitude < 0.001f) timeHeld += Time.fixedDeltaTime;
                 yield return new WaitForFixedUpdate();
             }
 
@@ -74,7 +74,7 @@ namespace LlockhamIndustries.Misc
             goalPosition = rearmedPosition;
             acceleration = rearmedAcceleration;
 
-            while (Vector3.Distance(press.transform.localPosition, goalPosition) > 0.01f || press.velocity.magnitude > 0.001f)
+            while (Vector3.Distance(press.transform.localPosition, goalPosition) > 0.01f || press.linearVelocity.magnitude > 0.001f)
             {
                 yield return new WaitForFixedUpdate();
             }

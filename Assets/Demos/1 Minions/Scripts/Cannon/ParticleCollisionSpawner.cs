@@ -27,7 +27,7 @@ namespace LlockhamIndustries.Misc
         }
         private void OnCollisionEnter(Collision collision)
         {
-            if (particles != null && rb.velocity.magnitude > requiredVelocity)
+            if (particles != null && rb.linearVelocity.magnitude > requiredVelocity)
             {
                 for (int i = 0; i < collision.contacts.Length; i++)
                 {

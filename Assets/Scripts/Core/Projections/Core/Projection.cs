@@ -235,6 +235,9 @@ namespace LlockhamIndustries.Decals
             //Projection Limit
             float limit = Mathf.Cos(Mathf.Deg2Rad * projectionLimit);
             Material.SetFloat(_NormalCutoff, limit);
+
+            //Pixel Mode
+            Material.SetFloat(_PixelMode, (pixelMode) ? 1 : 0);
         }
 
         //Static Properties
@@ -441,6 +444,19 @@ namespace LlockhamIndustries.Decals
             }
         }
 
+        public bool PixelMode
+        {
+            get { return pixelMode; }
+            set
+            {
+                if (pixelMode != value)
+                {
+                    pixelMode = value;
+                    Mark();
+                }
+            }
+        }
+
         /**
         * Defines whether this projection should be instanced.
         * Disable this if you need your projections to be drawn specifically in the order they where created, instead of instanced together and drawn in a pseudo random order.
@@ -550,12 +566,16 @@ namespace LlockhamIndustries.Decals
 
         [SerializeField]
         protected float projectionLimit = 80;
+
+        [SerializeField]
+        protected bool pixelMode = false;
         #endregion
         #region Property Ids
         public int _Cutoff;
         public int _TilingOffset;
         public int _MaskBase;
         public int _MaskLayers;
+        public int _PixelMode;
         protected int _NormalCutoff;
 
         protected virtual void GenerateIDs()
@@ -564,6 +584,7 @@ namespace LlockhamIndustries.Decals
             _TilingOffset = Shader.PropertyToID("_TilingOffset");
             _MaskBase = Shader.PropertyToID("_MaskBase");
             _MaskLayers = Shader.PropertyToID("_MaskLayers");
+            _PixelMode = Shader.PropertyToID("_PixelMode");
             _NormalCutoff = Shader.PropertyToID("_NormalCutoff");
         }
         #endregion

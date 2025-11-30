@@ -41,11 +41,11 @@ namespace LlockhamIndustries.Decals
             // Log Setup Warnings
             if (partSystem.collision.enabled != true)
             {
-                Debug.LogWarning("Particle system collisions must be enabled for the particle system to print decals");
+                UnityEngine.Debug.LogWarning("Particle system collisions must be enabled for the particle system to print decals");
             }
             else if (partSystem.collision.sendCollisionMessages != true)
             {
-                Debug.LogWarning("Particle system must send collision messages for the particle system to print decals. This option can be enabled under the collisions menu.");
+                UnityEngine.Debug.LogWarning("Particle system must send collision messages for the particle system to print decals. This option can be enabled under the collisions menu.");
             }
         }
 

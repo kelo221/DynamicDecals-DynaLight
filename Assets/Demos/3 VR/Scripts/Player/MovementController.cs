@@ -50,7 +50,7 @@ namespace LlockhamIndustries.VR
             //Validity check
             if (playspace == null || movementHandle == null)
             {
-                Debug.LogWarning("Please assign a valid playspace and handle to your movement controller.");
+                UnityEngine.Debug.LogWarning("Please assign a valid playspace and handle to your movement controller.");
                 return;
             }
 

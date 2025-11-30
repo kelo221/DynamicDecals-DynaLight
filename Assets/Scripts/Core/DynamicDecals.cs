@@ -158,7 +158,7 @@ namespace LlockhamIndustries.Decals
                         UpdateRenderers();
                     }
                 }
-                else Debug.LogWarning("Current Rendering Path not supported! Please use either Forward or Deferred");
+                else UnityEngine.Debug.LogWarning("Current Rendering Path not supported! Please use either Forward or Deferred");
             }
         }
         public void RestoreDepthTextureModes()
@@ -326,7 +326,7 @@ namespace LlockhamIndustries.Decals
             }
         }
 
-        //Debug
+        //UnityEngine.Debug
         public int ProjectionCount
         {
             get { return Projections.Count; }
@@ -584,7 +584,7 @@ namespace LlockhamIndustries.Decals
                 }
             }
             //No valid pool set up, log a Warning and return the default pool
-            Debug.LogWarning("No valid pool with the title : " + Title + " found. Returning default pool");
+            UnityEngine.Debug.LogWarning("No valid pool with the title : " + Title + " found. Returning default pool");
             return PoolFromInstance(settings.pools[0]);
         }
         /**
@@ -602,7 +602,7 @@ namespace LlockhamIndustries.Decals
                 }
             }
             //No valid pool set up, log a Warning and return the default pool
-            Debug.LogWarning("No valid pool with the ID : " + ID + " found. Returning default pool");
+            UnityEngine.Debug.LogWarning("No valid pool with the ID : " + ID + " found. Returning default pool");
             return PoolFromInstance(settings.pools[0]);
         }
         #endregion
@@ -719,12 +719,12 @@ namespace LlockhamIndustries.Decals
             }
         }
 
-        //Debug
+        //UnityEngine.Debug
         public static string DebugLog
         {
             get
             {
-                string debug = "Debug Information (Copy and Paste) \r\n";
+                string debug = "UnityEngine.Debug Information (Copy and Paste) \r\n";
 
                 //General settings
                 debug += "\r\nGeneral\r\n";
@@ -764,7 +764,7 @@ namespace LlockhamIndustries.Decals
         }
         public static void DebugInDevelopmentBuild()
         {
-            if (Debug.isDebugBuild) Debug.Log(DebugLog);
+            if (UnityEngine.Debug.isDebugBuild) UnityEngine.Debug.Log(DebugLog);
         }
 
         //Editor Scene Placement

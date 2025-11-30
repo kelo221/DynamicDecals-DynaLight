@@ -30,7 +30,7 @@ namespace LlockhamIndustries.Misc
                     GameObject col = (GameObject)Instantiate(colliders[colliderIndex], Position, Quaternion.identity, parent);
                     col.name = "Collider";
 
-                    col.GetComponent<Rigidbody>().velocity = Vector3.down * 4;
+                    col.GetComponent<Rigidbody>().linearVelocity = Vector3.down * 4;
                 }
                 //Iterate to next collider
                 colliderIndex = (colliderIndex < colliders.Length - 1) ? colliderIndex + 1 : 0;

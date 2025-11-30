@@ -18,14 +18,14 @@ namespace LlockhamIndustries.Misc
         public float bouncyness = 1;
 
         //Backing fields
-        private PhysicMaterial material;
+        private PhysicsMaterial material;
         private Rigidbody attachedRigidbody;
         private FirstPersonCharacterController controller;
 
         private float originalSpeed;
         private float originalSFriction;
         private float originalDFriction;
-        private PhysicMaterialCombine originalFrictionCombine;
+        private PhysicsMaterialCombine originalFrictionCombine;
 
         //Generic methods
         private void Awake()
@@ -55,7 +55,7 @@ namespace LlockhamIndustries.Misc
                     //Remove all friction
                     material.staticFriction = 0;
                     material.dynamicFriction = 0;
-                    material.frictionCombine = PhysicMaterialCombine.Minimum;
+                    material.frictionCombine = PhysicsMaterialCombine.Minimum;
                 }
                 else
                 {

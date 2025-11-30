@@ -23,7 +23,7 @@ namespace LlockhamIndustries.Misc
                 {
                     //Rigidbody check
                     Rigidbody r = collision.contacts[i].otherCollider.GetComponent<Rigidbody>();
-                    if (r == null || r.velocity.magnitude <= triggerVelocity) continue;
+                    if (r == null || r.linearVelocity.magnitude <= triggerVelocity) continue;
 
                     //Blood check
                     Blood b = collision.contacts[i].otherCollider.GetComponent<Blood>();
@@ -77,7 +77,7 @@ namespace LlockhamIndustries.Misc
 
             //Grab rigidbody & set velocity
             Rigidbody rigidbody = b.GetComponent<Rigidbody>();
-            rigidbody.velocity = Velocity;
+            rigidbody.linearVelocity = Velocity;
         }
     }
 }

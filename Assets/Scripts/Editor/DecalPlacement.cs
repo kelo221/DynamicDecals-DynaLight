@@ -237,7 +237,7 @@ namespace LlockhamIndustries.Decals
             //Projection Check
             if (prints == null || prints.Length < 1)
             {
-                Debug.LogError("No Projections to print. Please set at least one projection to print.");
+                UnityEngine.Debug.LogError("No Projections to print. Please set at least one projection to print.");
                 return;
             }
 

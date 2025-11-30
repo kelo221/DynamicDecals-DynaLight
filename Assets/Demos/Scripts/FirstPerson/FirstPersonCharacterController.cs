@@ -92,7 +92,7 @@ namespace LlockhamIndustries.Misc
             transform.rotation = Quaternion.Euler(characterRotation);
 
             //Get velocity
-            Vector3 velocity = attachedRigidbody.velocity;
+            Vector3 velocity = attachedRigidbody.linearVelocity;
 
             //Update horizontal velocity
             Vector3 goalAcceleration = transform.rotation * moveDelta.normalized * moveAcceleration;
@@ -117,7 +117,7 @@ namespace LlockhamIndustries.Misc
             }
 
             //Set velocity
-            attachedRigidbody.velocity = velocity;
+            attachedRigidbody.linearVelocity = velocity;
 
             //Update camera rotation
             cameraRotation.x -= lookDelta.y * lookSensitivity;

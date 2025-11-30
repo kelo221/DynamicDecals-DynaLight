@@ -56,11 +56,11 @@ namespace LlockhamIndustries.ExtensionMethods
 
         public static void LogLayers(this LayerMask Mask)
         {
-            foreach (int index in Mask.ContainedLayers()) Debug.Log(index);
+            foreach (int index in Mask.ContainedLayers()) UnityEngine.Debug.Log(index);
         }
         public static void LogLayerNames(this LayerMask Mask)
         {
-            foreach (string name in Mask.ContainedLayerNames()) Debug.Log(name);
+            foreach (string name in Mask.ContainedLayerNames()) UnityEngine.Debug.Log(name);
         }
     }
 }

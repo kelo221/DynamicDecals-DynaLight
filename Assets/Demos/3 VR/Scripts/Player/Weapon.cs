@@ -35,7 +35,7 @@ namespace LlockhamIndustries.Misc
         //Properties
         public float Velocity
         {
-            get { return rb.velocity.magnitude; }
+            get { return rb.linearVelocity.magnitude; }
         }
 
         //Trail
@@ -66,7 +66,7 @@ namespace LlockhamIndustries.Misc
             if (trail != null && rb != null)
             {
                 //Calculate velocity
-                float velocity = rb.velocity.magnitude;
+                float velocity = rb.linearVelocity.magnitude;
 
                 //Calculate goal time
                 if (goalTime == 0 && velocity > trailStartVelocity) goalTime = trailTime;
@@ -83,7 +83,7 @@ namespace LlockhamIndustries.Misc
         private void UpdateWeaponState()
         {
             rb.mass = weaponState.mass;
-            rb.drag = weaponState.drag;
+            rb.linearDamping = weaponState.drag;
 
             joint.maxDistance = weaponState.reach;
             joint.spring = weaponState.spring;

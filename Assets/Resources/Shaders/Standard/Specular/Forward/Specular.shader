@@ -22,6 +22,8 @@
 
 		_MaskBase("Mask Base", Range(0.0, 1.0)) = 0.0
 		_MaskLayers("Layers", Color) = (0.5, 0.5, 0.5, 0.5)
+		
+		[Toggle]_PixelMode ("Pixel Mode", Float) = 0
 	}
 
 	//3.0
@@ -39,7 +41,7 @@
 			Blend SrcAlpha OneMinusSrcAlpha
 
 			CGPROGRAM
-			#pragma target 3.0
+			#pragma target 4.5
 			#pragma multi_compile_instancing
 			#pragma multi_compile_fwdbase
 			#pragma multi_compile_fog
@@ -49,6 +51,8 @@
 			#pragma multi_compile _ _AlphaTest
 			#pragma multi_compile ___ _Omni
 
+			#include "UnityCG.cginc"
+			#include_with_pragmas "Packages/de.alpacait.dynamiclighting/AlpacaIT.DynamicLighting/Shaders/DynamicLighting.cginc"
 			#include "../../../Cginc/ForwardProjections.cginc"
 
 			#pragma vertex vertProjection
@@ -66,16 +70,18 @@
 			Fog{ Color(0,0,0,0) }
 
 			CGPROGRAM
-			#pragma target 3.0
+			#pragma target 4.5
 			#pragma multi_compile_fwdadd_fullshadows
 			#pragma multi_compile_fog
 			#pragma glsl
 
-			#include "../../../Cginc/ForwardProjections.cginc"
-
 			#pragma multi_compile _PrecisionDepthNormals _CustomDepthNormals
 			#pragma multi_compile _ _AlphaTest
 			#pragma multi_compile ___ _Omni
+
+			#include "UnityCG.cginc"
+			#include_with_pragmas "Packages/de.alpacait.dynamiclighting/AlpacaIT.DynamicLighting/Shaders/DynamicLighting.cginc"
+			#include "../../../Cginc/ForwardProjections.cginc"
 
 			#pragma vertex vertProjection
 			#pragma fragment fragForwardAddSpecular

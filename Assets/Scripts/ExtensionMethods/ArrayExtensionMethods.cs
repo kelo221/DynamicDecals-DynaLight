@@ -95,7 +95,7 @@ namespace LlockhamIndustries.ExtensionMethods
                 }
                 else
                 {
-                    Debug.LogError("Index out of Bounds");
+                    UnityEngine.Debug.LogError("Index out of Bounds");
                 }
             }
             return Array;

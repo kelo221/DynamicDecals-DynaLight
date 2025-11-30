@@ -89,7 +89,7 @@ namespace LlockhamIndustries.Misc
                 //Lock rotation towards mouse
                 if (cameraController == null)
                 {
-                    Debug.Log("No Camera Controller Assigned! Please assign a valid camera controller.");
+                    UnityEngine.Debug.Log("No Camera Controller Assigned! Please assign a valid camera controller.");
                     return;
                 }
 
@@ -103,7 +103,7 @@ namespace LlockhamIndustries.Misc
                 }
                 else
                 {
-                    Debug.Log("Error Casting to Plane, Cannot Determine Cursor Location");
+                    UnityEngine.Debug.Log("Error Casting to Plane, Cannot Determine Cursor Location");
                 }
             }
             else

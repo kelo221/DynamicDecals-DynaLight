@@ -35,7 +35,7 @@ namespace LlockhamIndustries.Misc
                 while (true)
                 {
                     GameObject spawn = Instantiate(liquid, transform.position + (transform.rotation * offset), Quaternion.identity, liquidParent);
-                    spawn.GetComponent<Rigidbody>().velocity = Vector3.Lerp((transform.rotation * direction.normalized), Random.insideUnitSphere, spread) * speed;
+                    spawn.GetComponent<Rigidbody>().linearVelocity = Vector3.Lerp((transform.rotation * direction.normalized), Random.insideUnitSphere, spread) * speed;
 
                     yield return new WaitForSeconds(1 / Mathf.Max(0.001f, spawnRate));
                 }

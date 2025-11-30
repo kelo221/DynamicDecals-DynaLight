@@ -74,7 +74,7 @@ namespace LlockhamIndustries.Decals
             //General settings
             GeneralSettings(new Rect(0, 54 + (LlockhamEditorUtility.TabHeight * (settings.pools.Length + 4)) + maskHeight, scrollRect.width, generalHeight), settings);
 
-            //Debug settings
+            //UnityEngine.Debug settings
             DebugSettings(new Rect(0, 64 + (LlockhamEditorUtility.TabHeight * (settings.pools.Length + 4)) + maskHeight + generalHeight, scrollRect.width, debugHeight));
 
             //End change check & scrollView
@@ -181,7 +181,7 @@ namespace LlockhamIndustries.Decals
 
                 //Header
                 EditorGUI.DrawRect(new Rect(0, 0, Area.width, 24), LlockhamEditorUtility.HeaderColor);
-                EditorGUI.LabelField(new Rect(8, 4, Area.width - 32, 16), "Debug", EditorStyles.boldLabel);
+                EditorGUI.LabelField(new Rect(8, 4, Area.width - 32, 16), "UnityEngine.Debug", EditorStyles.boldLabel);
 
                 //Draw Background
                 EditorGUI.DrawRect(new Rect(0, 24, Area.width, Area.height - 24), LlockhamEditorUtility.MidgroundColor);
@@ -619,7 +619,7 @@ namespace LlockhamIndustries.Decals
             }
             else
             {
-                Debug.LogError("Index Invalid");
+                UnityEngine.Debug.LogError("Index Invalid");
             }
         }
         private void Swap(DynamicDecalSettings Settings, int IndexA, int IndexB)

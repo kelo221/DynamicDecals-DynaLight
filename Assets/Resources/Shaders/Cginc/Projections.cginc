@@ -9,6 +9,12 @@
 
 #include "AutoLight.cginc"
 
+//Dynamic Lighting Support - fallback when DynamicLighting.cginc is not included
+//Check for light_type_point which is defined in DynamicLighting.cginc
+#if !defined(light_type_point)
+    static float3 dynamic_ambient_color = float3(1.0, 1.0, 1.0);
+#endif
+
 //Unity screenspace samplers
 uniform sampler2D_float _CameraDepthTexture;
 uniform sampler2D_float _CameraDepthNormalsTexture;
@@ -37,10 +43,13 @@ UNITY_DEFINE_INSTANCED_PROP (float4, _MaskLayers)
 #define _MaskLayers_arr MyProperties
 UNITY_DEFINE_INSTANCED_PROP (float, _MaskBase)
 #define _MaskBase_arr MyProperties
+UNITY_DEFINE_INSTANCED_PROP (float, _PixelMode)
+#define _PixelMode_arr MyProperties
 UNITY_INSTANCING_BUFFER_END(MyProperties)
 
 //Shader parameters
 sampler2D _MainTex;
+float4 _MainTex_TexelSize;
 
 float _Glossiness;
 
@@ -306,6 +315,7 @@ struct FragmentCommonData
 	half3 eyeVec;
 
 	half3 posWorld;
+	half metallic;
 };
 
 //GI
@@ -351,6 +361,17 @@ inline UnityGI FragmentGI(FragmentCommonData s, half occlusion, half4 i_ambientO
 	}
 }
 
+//Pixel mode UV snapping for sharp texels
+half2 PixelUV(half2 uv)
+{
+	float pixelMode = UNITY_ACCESS_INSTANCED_PROP(_PixelMode_arr, _PixelMode);
+	if (pixelMode > 0.5)
+	{
+		return (floor(uv * _MainTex_TexelSize.zw) + 0.5) * _MainTex_TexelSize.xy;
+	}
+	return uv;
+}
+
 //Input
 half NormalOcclusion(float2 localUvs)
 {
@@ -377,11 +398,12 @@ half AlbedoOcclusion(float2 localUvs)
 {
 	//Calculate alpha
 	float alpha = UNITY_ACCESS_INSTANCED_PROP(_Color_arr, _Color).a;
+	half2 pixelUvs = PixelUV(localUvs);
 
 	#if !defined(SHADER_API_D3D11_9X)
-	alpha *= tex2Dlod(_MainTex, float4(localUvs, 0, 0)).a;
+	alpha *= tex2Dlod(_MainTex, float4(pixelUvs, 0, 0)).a;
 	#else
-	alpha *= tex2D(_MainTex, localUvs).a;
+	alpha *= tex2D(_MainTex, pixelUvs).a;
 	#endif
 
 	//Clip alpha
@@ -398,11 +420,12 @@ half ShapeOcclusion(float2 localUvs)
 {
 	//Calculate alpha
 	float alpha = UNITY_ACCESS_INSTANCED_PROP(_Multiplier_arr, _Multiplier);
+	half2 pixelUvs = PixelUV(localUvs);
 
 	#if !defined(SHADER_API_D3D11_9X)
-	alpha *= tex2Dlod(_MainTex, float4(localUvs, 0, 0)).a;
+	alpha *= tex2Dlod(_MainTex, float4(pixelUvs, 0, 0)).a;
 	#else
-	alpha *= tex2D(_MainTex, localUvs).a;
+	alpha *= tex2D(_MainTex, pixelUvs).a;
 	#endif
 
 	//Clip alpha
@@ -419,7 +442,7 @@ half ShapeOcclusion(float2 localUvs)
 half3 Albedo(float2 localUvs)
 {
 	half3 color = UNITY_ACCESS_INSTANCED_PROP (_Color_arr, _Color).rgb;
-	return color * tex2D(_MainTex, localUvs).rgb;
+	return color * tex2D(_MainTex, PixelUV(localUvs)).rgb;
 }
 half4 SpecGloss(float2 localUvs)
 {
@@ -492,6 +515,7 @@ inline FragmentCommonData FragmentUnlit(Projection i_projection, half3 i_worldUp
 	o.specColor = half3(0, 0, 0);
 	o.oneMinusReflectivity = 1;
 	o.oneMinusRoughness = 0;
+	o.metallic = 0;
 	return o;
 }
 inline FragmentCommonData FragmentSpecular(Projection i_projection, half3 i_worldUp, half3 i_eyeVec)
@@ -529,5 +553,6 @@ inline FragmentCommonData FragmentMetallic(Projection i_projection, half3 i_worl
 	o.specColor = specColor;
 	o.oneMinusReflectivity = oneMinusReflectivity;
 	o.oneMinusRoughness = oneMinusRoughness;
+	o.metallic = metallic;
 	return o;
 }

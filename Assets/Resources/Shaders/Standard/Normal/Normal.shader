@@ -13,6 +13,8 @@
 
 		_MaskBase("Mask Base", Range(0.0, 1.0)) = 0.0
 		_MaskLayers("Layers", Color) = (0.5, 0.5, 0.5, 0.5)
+		
+		[Toggle]_PixelMode ("Pixel Mode", Float) = 0
 	}
 
 	//3.0
@@ -32,7 +34,7 @@
 			Blend 3 Zero One
 
 			CGPROGRAM
-			#pragma target 3.0
+			#pragma target 4.5
 			#pragma multi_compile_instancing
 			#pragma exclude_renderers nomrt
 			#pragma glsl
@@ -46,6 +48,8 @@
 			#pragma multi_compile ____ _AlphaTest
 			#pragma multi_compile _ _Omni
 
+			#include "UnityCG.cginc"
+			#include_with_pragmas "Packages/de.alpacait.dynamiclighting/AlpacaIT.DynamicLighting/Shaders/DynamicLighting.cginc"
 			#include "../../Cginc/DeferredPasses.cginc"
 
 			#pragma vertex vertProjection

@@ -30,6 +30,9 @@ namespace LlockhamIndustries.Decals
         //Projection Limit
         protected SerializedProperty projectionLimit;
 
+        //Pixel Mode
+        protected SerializedProperty pixelMode;
+
         //Drawers
         protected PropertyGroupDrawer[] propertyGroups;
 
@@ -86,6 +89,7 @@ namespace LlockhamIndustries.Decals
                 maskMethod = serializedObject.FindProperty("maskMethod");
                 masks = serializedObject.FindProperty("masks");
                 projectionLimit = serializedObject.FindProperty("projectionLimit");
+                pixelMode = serializedObject.FindProperty("pixelMode");
             }
         }
         public virtual void OnDisable()
@@ -248,6 +252,25 @@ namespace LlockhamIndustries.Decals
                 }
                 GUI.EndGroup();
             }
+        }
+        protected void PixelMode()
+        {
+            Rect Rect = GUILayoutUtility.GetRect(0, 22 + LlockhamEditorUtility.Spacing);
+            EditorGUI.DrawRect(new Rect(Rect.x, Rect.y + 2, Rect.width, Rect.height - 6), LlockhamEditorUtility.MidgroundColor);
+            GUI.BeginGroup(Rect);
+
+            //Header
+            EditorGUI.LabelField(new Rect(0, 4, Rect.width * 0.4f, 16), new GUIContent("Pixel Mode", "Enables pixel snapping for retro style graphics."), EditorStyles.boldLabel);
+
+            //Properties
+            EditorGUI.BeginChangeCheck();
+            pixelMode.boolValue = EditorGUI.Toggle(new Rect((Rect.width * 0.4f) + 8, 4, (Rect.width * 0.6f) - 12, 16), new GUIContent(""), pixelMode.boolValue);
+            if (EditorGUI.EndChangeCheck())
+            {
+                Mark();
+            }
+
+            GUI.EndGroup();
         }
         protected void ForceForward()
         {

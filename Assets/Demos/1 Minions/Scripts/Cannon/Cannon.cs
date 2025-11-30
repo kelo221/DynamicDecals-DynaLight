@@ -62,13 +62,13 @@ namespace LlockhamIndustries.Misc
                 Vector3 ballVelocity = barrel.transform.rotation * velocity;
 
                 //Give cannonball velocity
-                crb.velocity = ballVelocity;
+                crb.linearVelocity = ballVelocity;
 
                 //Calculare barrel velocity
                 Vector3 barrelVelocity = -ballVelocity * (crb.mass / barrel.mass);
 
                 //Apply equal force against barrel
-                barrel.velocity = barrelVelocity;
+                barrel.linearVelocity = barrelVelocity;
             }
         }
 

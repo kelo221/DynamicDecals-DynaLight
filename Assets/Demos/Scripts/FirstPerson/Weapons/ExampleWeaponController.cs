@@ -51,7 +51,7 @@ namespace LlockhamIndustries.Misc
 
                     //Setup initial velocity
                     Rigidbody firebody = fire.GetComponent<Rigidbody>();
-                    if (controller != null) firebody.velocity = controller.GetComponent<Rigidbody>().velocity;
+                    if (controller != null) firebody.linearVelocity = controller.GetComponent<Rigidbody>().linearVelocity;
                     firebody.AddForce(projectileDirection * raySpeed, ForceMode.VelocityChange);
 
                     //Apply recoil
@@ -72,7 +72,7 @@ namespace LlockhamIndustries.Misc
 
                     //Setup initial velocity
                     Rigidbody firebody = fire.GetComponent<Rigidbody>();
-                    if (controller != null) firebody.velocity = controller.GetComponent<Rigidbody>().velocity;
+                    if (controller != null) firebody.linearVelocity = controller.GetComponent<Rigidbody>().linearVelocity;
                     firebody.AddForce(projectileDirection * colliderSpeed, ForceMode.VelocityChange);
 
                     //Apply recoil
@@ -86,7 +86,7 @@ namespace LlockhamIndustries.Misc
                 {
                     if (cameraController == null)
                     {
-                        Debug.Log("No Camera Set! Please set a camera for the weapon to aim with");
+                        UnityEngine.Debug.Log("No Camera Set! Please set a camera for the weapon to aim with");
                         return;
                     }
 

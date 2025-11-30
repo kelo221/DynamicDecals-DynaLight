@@ -1,6 +1,6 @@
 #include "Projections.cginc"
 
-//UnityLight
+//UnityLight Helper (Moved up for scope visibility)
 UnityLight MainLight(half3 normalWorld)
 {
 	UnityLight l;
@@ -41,6 +41,54 @@ UnityIndirect ZeroIndirect()
 	ind.specular = 0;
 	return ind;
 }
+
+//Dynamic Lighting Integration
+//Check if DynamicLighting is available via one of its internal macros or defines
+#if defined(DYNLIT_FRAGMENT_INTERNAL)
+
+struct v2f_dynlit {
+    float3 world : TEXCOORD0;
+    float2 uv1 : TEXCOORD1;
+    float3 normal : NORMAL;
+};
+
+//Redefine the macro to match our custom struct and conditional arguments
+#ifdef DYNLIT_FRAGMENT_LIGHT
+    #undef DYNLIT_FRAGMENT_LIGHT
+#endif
+
+#define DYNLIT_FRAGMENT_LIGHT_OUT_PARAMETERS inout float3 albedo, inout float3 specColor, inout float oneMinusReflectivity, inout float oneMinusRoughness, inout float3 N, inout float3 V, inout float3 Lo
+#define DYNLIT_FRAGMENT_LIGHT_IN_PARAMETERS albedo, specColor, oneMinusReflectivity, oneMinusRoughness, N, V, Lo
+
+#ifdef DYNAMIC_LIGHTING_DYNAMIC_GEOMETRY_DISTANCE_CUBES
+    #define DYNLIT_FRAGMENT_LIGHT void dynlit_frag_light(v2f_dynlit i, uint triangle_index, bool is_front_face, int bvhLightIndex, inout DynamicLight light, inout DynamicTriangle dynamic_triangle, DYNLIT_FRAGMENT_LIGHT_OUT_PARAMETERS)
+#else
+    #define DYNLIT_FRAGMENT_LIGHT void dynlit_frag_light(v2f_dynlit i, uint triangle_index, bool is_front_face, inout DynamicLight light, inout DynamicTriangle dynamic_triangle, DYNLIT_FRAGMENT_LIGHT_OUT_PARAMETERS)
+#endif
+
+DYNLIT_FRAGMENT_LIGHT
+{
+    #define GENERATE_NORMAL N
+    #include "Packages/de.alpacait.dynamiclighting/AlpacaIT.DynamicLighting/Shaders/Generators/LightProcessor.cginc"
+    
+    UnityLight dLight;
+    dLight.color = light.color * light.intensity * attenuation * map;
+    dLight.dir = light_direction;
+    dLight.ndotl = NdotL;
+    
+    UnityIndirect dIndirect = ZeroIndirect();
+    
+    half4 c = UNITY_BRDF_PBS(albedo, specColor, oneMinusReflectivity, oneMinusRoughness, N, V, dLight, dIndirect);
+    
+    Lo += c.rgb;
+    
+#if defined(DYNAMIC_LIGHTING_BOUNCE) && !defined(DYNAMIC_LIGHTING_INTEGRATED_GRAPHICS)
+    float3 radiance = (light.color * light.intensity * attenuation);
+    Lo += (albedo / UNITY_PI) * radiance * bounce;
+#endif
+}
+
+#endif // DYNLIT_FRAGMENT_INTERNAL
 
 //Lighting
 inline fixed LightAttenuation(float3 posWorld, float2 screenPos)
@@ -193,6 +241,91 @@ half4 Output(half3 color, half occlusion)
 	#endif
 }
 
+//Helpers matching DynaLightToon logic
+float Decal_DistributionGGX(float3 N, float3 H, float roughness)
+{
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float NdotH = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH * NdotH;
+
+    float nom   = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = UNITY_PI * denom * denom;
+
+    return nom / denom;
+}
+
+float Decal_GeometrySchlickGGX(float NdotV, float roughness)
+{
+    float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
+
+    float nom   = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+
+    return nom / denom;
+}
+
+float Decal_GeometrySmith(float3 N, float3 V, float3 L, float roughness)
+{
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2 = Decal_GeometrySchlickGGX(NdotV, roughness);
+    float ggx1 = Decal_GeometrySchlickGGX(NdotL, roughness);
+
+    return ggx1 * ggx2;
+}
+
+float3 Decal_FresnelSchlick(float cosTheta, float3 F0)
+{
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
+half4 Custom_BRDF_ToonMetallic(half3 diffColor, half3 specColor, half oneMinusReflectivity, half oneMinusRoughness, half3 normal, half3 viewDir, UnityLight light, UnityIndirect gi, half metallic)
+{
+    float3 N = normal;
+    float3 V = viewDir;
+    float3 L = light.dir;
+    
+    float roughness = 1.0 - oneMinusRoughness;
+    roughness = max(roughness, 0.02);
+
+    float3 H = normalize(V + L);
+    float NdotL = max(dot(N, L), 0.0);
+    float NdotV = max(dot(N, V), 0.0);
+
+    // Specular (Cook-Torrance)
+    float NDF = Decal_DistributionGGX(N, H, roughness);
+    float G = Decal_GeometrySmith(N, V, L, roughness);
+    float3 F0 = specColor; 
+    float3 F = Decal_FresnelSchlick(max(dot(H, V), 0.0), F0);
+
+    float3 numerator = NDF * G * F;
+    float denominator = 4.0 * NdotV * NdotL + 0.0001;
+    float3 specular = numerator / denominator;
+    
+    // Apply metallic scaling as per Toon shader
+    specular *= metallic; 
+
+    // Apply lighting
+    // UnityLight.ndotl is N.L
+    float3 radiance = light.color * light.ndotl; 
+    
+    // Direct Color
+    float3 color = (diffColor + specular) * radiance;
+    
+    // Indirect Color (GI)
+    // Standard Fresnel for environment
+    float3 F_ind = Decal_FresnelSchlick(NdotV, F0); 
+    float3 indirectDiffuse = gi.diffuse * diffColor;
+    float3 indirectSpecular = gi.specular * F_ind;
+    
+    float3 indirect = indirectDiffuse + indirectSpecular;
+    
+    return half4(color + indirect, 1.0);
+}
+
 //Metallic Programs
 half4 fragForwardMetallic(ProjectionInput i) : SV_Target
 {
@@ -213,9 +346,37 @@ half4 fragForwardMetallic(ProjectionInput i) : SV_Target
 	UnityGI gi = FragmentGI(fragment, 1, half4(0,0,0,0), atten, mainLight, true);
 
 	//Calculate final output
-	half4 c = UNITY_BRDF_PBS(fragment.diffColor, fragment.specColor, fragment.oneMinusReflectivity, fragment.oneMinusRoughness, fragment.normalWorld, -fragment.eyeVec, gi.light, gi.indirect);
-	c.rgb += UNITY_BRDF_GI(fragment.diffColor, fragment.specColor, fragment.oneMinusReflectivity, fragment.oneMinusRoughness, fragment.normalWorld, -fragment.eyeVec, 1, gi);
+	half4 c = Custom_BRDF_ToonMetallic(fragment.diffColor, fragment.specColor, fragment.oneMinusReflectivity, fragment.oneMinusRoughness, fragment.normalWorld, -fragment.eyeVec, gi.light, gi.indirect, fragment.metallic);
+	//c.rgb += UNITY_BRDF_GI(fragment.diffColor, fragment.specColor, fragment.oneMinusReflectivity, fragment.oneMinusRoughness, fragment.normalWorld, -fragment.eyeVec, 1, gi);
 	c.rgb += EmissionAlpha(projection.localUV);
+
+	//Apply dynamic lighting ambient
+	#if defined(DYNAMIC_LIGHTING_LIT)
+	c.rgb *= dynamic_ambient_color;
+    {
+        v2f_dynlit i_dyn;
+        i_dyn.world = projection.posWorld;
+        i_dyn.uv1 = float2(0,0);
+        i_dyn.normal = fragment.normalWorld;
+
+        #define i i_dyn
+        uint triangle_index = 0;
+        bool is_front_face = true;
+        
+        float3 albedo = fragment.diffColor;
+        float3 specColor = fragment.specColor;
+        float oneMinusReflectivity = fragment.oneMinusReflectivity;
+        float oneMinusRoughness = fragment.oneMinusRoughness;
+        float3 N = fragment.normalWorld;
+        float3 V = -fragment.eyeVec;
+        float3 Lo = float3(0,0,0);
+        
+        DYNLIT_FRAGMENT_INTERNAL
+        
+        c.rgb += Lo;
+        #undef i
+    }
+	#endif
 
 	UNITY_APPLY_FOG(i.fogCoord, c.rgb);
 	return Output(c.rgb, fragment.occlusion);
@@ -236,7 +397,12 @@ half4 fragForwardAddMetallic(ProjectionInput i) : SV_Target
 	UnityLight light = AdditiveLight(fragment.normalWorld, lightDir, atten);
 	UnityIndirect noIndirect = ZeroIndirect();
 
-	half4 c = UNITY_BRDF_PBS(fragment.diffColor, fragment.specColor, fragment.oneMinusReflectivity, fragment.oneMinusRoughness, fragment.normalWorld, -fragment.eyeVec, light, noIndirect);
+	half4 c = Custom_BRDF_ToonMetallic(fragment.diffColor, fragment.specColor, fragment.oneMinusReflectivity, fragment.oneMinusRoughness, fragment.normalWorld, -fragment.eyeVec, light, noIndirect, fragment.metallic);
+
+	//Apply dynamic lighting ambient
+	#if defined(DYNAMIC_LIGHTING_LIT)
+	c.rgb *= dynamic_ambient_color;
+	#endif
 
 	UNITY_APPLY_FOG_COLOR(i.fogCoord, c.rgb, half4(0.0, 0.0, 0.0, 0.0));
 	return Output(c.rgb, fragment.occlusion);
@@ -266,6 +432,34 @@ half4 fragForwardSpecular(ProjectionInput i) : SV_Target
 	c.rgb += UNITY_BRDF_GI(fragment.diffColor, fragment.specColor, fragment.oneMinusReflectivity, fragment.oneMinusRoughness, fragment.normalWorld, -fragment.eyeVec, 1, gi);
 	c.rgb += EmissionAlpha(projection.localUV);
 
+	//Apply dynamic lighting ambient
+	#if defined(DYNAMIC_LIGHTING_LIT)
+	c.rgb *= dynamic_ambient_color;
+    {
+        v2f_dynlit i_dyn;
+        i_dyn.world = projection.posWorld;
+        i_dyn.uv1 = float2(0,0);
+        i_dyn.normal = fragment.normalWorld;
+
+        #define i i_dyn
+        uint triangle_index = 0;
+        bool is_front_face = true;
+        
+        float3 albedo = fragment.diffColor;
+        float3 specColor = fragment.specColor;
+        float oneMinusReflectivity = fragment.oneMinusReflectivity;
+        float oneMinusRoughness = fragment.oneMinusRoughness;
+        float3 N = fragment.normalWorld;
+        float3 V = -fragment.eyeVec;
+        float3 Lo = float3(0,0,0);
+        
+        DYNLIT_FRAGMENT_INTERNAL
+        
+        c.rgb += Lo;
+        #undef i
+    }
+	#endif
+
 	UNITY_APPLY_FOG(i.fogCoord, c.rgb);
 	return Output(c.rgb, fragment.occlusion);
 }
@@ -286,6 +480,11 @@ half4 fragForwardAddSpecular(ProjectionInput i) : SV_Target
 	UnityIndirect noIndirect = ZeroIndirect();
 
 	half4 c = UNITY_BRDF_PBS(fragment.diffColor, fragment.specColor, fragment.oneMinusReflectivity, fragment.oneMinusRoughness, fragment.normalWorld, -fragment.eyeVec, light, noIndirect);
+
+	//Apply dynamic lighting ambient
+	#if defined(DYNAMIC_LIGHTING_LIT)
+	c.rgb *= dynamic_ambient_color;
+	#endif
 
 	UNITY_APPLY_FOG_COLOR(i.fogCoord, c.rgb, half4(0, 0, 0, 0));
 	return Output(c.rgb, fragment.occlusion);

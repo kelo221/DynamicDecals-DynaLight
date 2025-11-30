@@ -24,6 +24,7 @@ namespace LlockhamIndustries.Decals
 
             //Masking();
             ProjectionLimit();
+            PixelMode();
             ForceForward();
             Instanced();
 

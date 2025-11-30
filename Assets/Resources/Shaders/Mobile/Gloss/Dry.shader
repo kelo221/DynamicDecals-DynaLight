@@ -25,7 +25,7 @@
 			BlendOp Min
 
 			CGPROGRAM
-			#pragma target 3.0
+			#pragma target 4.5
 			#pragma multi_compile_instancing
 			#pragma exclude_renderers nomrt
 			#pragma glsl

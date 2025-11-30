@@ -79,6 +79,11 @@ void fragMetallicOpaque(ProjectionInput i, out half4 outAlbedo : SV_Target, out 
 	//Emission
 	a += EmissionAlpha(projection.localUV);
 
+	//Apply dynamic lighting ambient
+	#if defined(DYNAMIC_LIGHTING_LIT)
+	a *= dynamic_ambient_color;
+	#endif
+
 	//Albedo output
 	half3 c = fragment.diffColor;
 	outAlbedo = AlbedoOutput(c, fragment.occlusion);
@@ -108,6 +113,11 @@ void fragMetallicTransparent(ProjectionInput i, out half4 outAlbedo : SV_Target,
 
 	//Emission
 	a += EmissionAlpha(projection.localUV);
+
+	//Apply dynamic lighting ambient
+	#if defined(DYNAMIC_LIGHTING_LIT)
+	a *= dynamic_ambient_color;
+	#endif
 
 	//Albedo output
 	half3 c = fragment.diffColor;
@@ -161,6 +171,11 @@ void fragSpecularOpaque(ProjectionInput i, out half4 outAlbedo : SV_Target, out 
 	//Emission
 	a += EmissionAlpha(projection.localUV);
 
+	//Apply dynamic lighting ambient
+	#if defined(DYNAMIC_LIGHTING_LIT)
+	a *= dynamic_ambient_color;
+	#endif
+
 	//Albedo output
 	half3 c = fragment.diffColor;
 	outAlbedo = AlbedoOutput(c, fragment.occlusion);
@@ -189,6 +204,11 @@ void fragSpecularTransparent(ProjectionInput i, out half4 outAlbedo : SV_Target,
 
 	//Emission
 	a += EmissionAlpha(projection.localUV);
+
+	//Apply dynamic lighting ambient
+	#if defined(DYNAMIC_LIGHTING_LIT)
+	a *= dynamic_ambient_color;
+	#endif
 
 	//Albedo output
 	half3 c = fragment.diffColor;
