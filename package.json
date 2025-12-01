@@ -1,0 +1,23 @@
+{
+  "name": "com.llockham.dynamic-decals",
+  "version": "1.0.0",
+  "displayName": "Dynamic Decals",
+  "description": "Dynamic Decals is the decal solution built from the ground up to be fast, easy to use and flexible. Perfect for bullet holes, blood effects, projected UI elements and just about anything else you can think of! With added support for Henry's Dynamic Lighting.",
+  "unity": "6.2",
+  "unityRelease": "14f1",
+  "keywords": [
+    "decals",
+    "projection",
+    "effects",
+    "rendering"
+  ],
+  "author": {
+    "name": "Llockham-Industries",
+    "url": "https://github.com/kelo221/DynamicDecals-DynaLight"
+  },
+ "dependencies": {
+    "de.alpacait.dynamiclighting": "https://github.com/Henry00IS/DynamicLighting.git"
+  },
+  "samples": []
+}
+
