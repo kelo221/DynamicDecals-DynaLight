@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using System.Collections;
 
 using LlockhamIndustries.Decals;
@@ -105,3 +106,4 @@ namespace LlockhamIndustries.Misc
         }
     }
 }
+#endif

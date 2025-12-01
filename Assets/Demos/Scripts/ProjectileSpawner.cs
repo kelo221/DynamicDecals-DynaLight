@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#if UNITY_EDITOR
+using UnityEngine;
+
 
 namespace LlockhamIndustries.Misc
 {
@@ -44,3 +45,4 @@ namespace LlockhamIndustries.Misc
         }
     }
 }
+#endif

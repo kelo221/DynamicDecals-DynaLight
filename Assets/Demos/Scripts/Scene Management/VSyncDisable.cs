@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using System.Collections;
 
 namespace LlockhamIndustries.Misc
@@ -11,3 +12,4 @@ namespace LlockhamIndustries.Misc
         }
     }
 }
+#endif

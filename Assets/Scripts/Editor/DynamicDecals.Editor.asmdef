@@ -1,0 +1,18 @@
+{
+    "name": "DynamicDecals.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:21c61a5fa1c9d2c4bb852032cc35d66b"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

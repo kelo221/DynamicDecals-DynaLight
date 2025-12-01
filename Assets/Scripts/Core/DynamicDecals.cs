@@ -1149,11 +1149,14 @@ namespace LlockhamIndustries.Decals
                     break;
             }
 
+            #if UNITY_EDITOR
+            // Editor-only diagnostic logging – stripped from player builds
             if (depthBuffer != null) Misc.DebugManager.Log("Depth Format", depthBuffer.format.ToString());
             if (normalBuffer != null) Misc.DebugManager.Log("Normal Format", normalBuffer.format.ToString());
             if (maskBuffer != null) Misc.DebugManager.Log("Mask Format", maskBuffer.format.ToString());
             Misc.DebugManager.Log("Shader Replacement", shaderReplacement.ToString());
             Misc.DebugManager.Log("API", SystemInfo.graphicsDeviceType.ToString());
+            #endif
 
             //Update our rendering method
             if (replacement != shaderReplacement)

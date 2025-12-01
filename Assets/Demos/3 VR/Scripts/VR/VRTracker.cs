@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 
 namespace LlockhamIndustries.VR
 {
@@ -64,3 +65,4 @@ namespace LlockhamIndustries.VR
         public enum VRTarget { LeftHand, RightHand, Head };
     }
 }
+#endif
