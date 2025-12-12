@@ -60,7 +60,7 @@ struct v2f_dynlit {
 #define DYNLIT_FRAGMENT_LIGHT_OUT_PARAMETERS inout float3 albedo, inout float3 specColor, inout float oneMinusReflectivity, inout float oneMinusRoughness, inout float3 N, inout float3 V, inout float3 Lo
 #define DYNLIT_FRAGMENT_LIGHT_IN_PARAMETERS albedo, specColor, oneMinusReflectivity, oneMinusRoughness, N, V, Lo
 
-#ifdef DYNAMIC_LIGHTING_DYNAMIC_GEOMETRY_DISTANCE_CUBES
+#if defined(DYNAMIC_LIGHTING_DYNAMIC_GEOMETRY_DISTANCE_CUBES) || defined(DYNAMIC_LIGHTING_DYNAMIC_GEOMETRY_ANGULAR)
     #define DYNLIT_FRAGMENT_LIGHT void dynlit_frag_light(v2f_dynlit i, uint triangle_index, bool is_front_face, int bvhLightIndex, inout DynamicLight light, inout DynamicTriangle dynamic_triangle, DYNLIT_FRAGMENT_LIGHT_OUT_PARAMETERS)
 #else
     #define DYNLIT_FRAGMENT_LIGHT void dynlit_frag_light(v2f_dynlit i, uint triangle_index, bool is_front_face, inout DynamicLight light, inout DynamicTriangle dynamic_triangle, DYNLIT_FRAGMENT_LIGHT_OUT_PARAMETERS)
