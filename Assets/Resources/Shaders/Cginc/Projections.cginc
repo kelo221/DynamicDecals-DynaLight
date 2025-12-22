@@ -377,11 +377,12 @@ half NormalOcclusion(float2 localUvs)
 {
 	//Calculate alpha
 	float alpha = 0;
+	half2 pixelUvs = PixelUV(localUvs);
 
 	#if !defined(SHADER_API_D3D11_9X)
-	alpha = tex2Dlod(_BumpMap, float4(localUvs, 0, 0)).a;
+	alpha = tex2Dlod(_BumpMap, float4(pixelUvs, 0, 0)).a;
 	#else
-	alpha = tex2D(_BumpMap, localUvs).a;
+	alpha = tex2D(_BumpMap, pixelUvs).a;
 	#endif
 
 	//Clip alpha
@@ -446,7 +447,8 @@ half3 Albedo(float2 localUvs)
 }
 half4 SpecGloss(float2 localUvs)
 {
-	half4 sg = tex2D(_SpecGlossMap, localUvs);
+	half2 pixelUvs = PixelUV(localUvs);
+	half4 sg = tex2D(_SpecGlossMap, pixelUvs);
 	sg.rgb *= _SpecColor.rgb;
 	sg.a *= _Glossiness;
 
@@ -454,7 +456,8 @@ half4 SpecGloss(float2 localUvs)
 }
 half2 MetalGloss(float2 localUvs)
 {
-	half2 mg = tex2D(_MetallicGlossMap, localUvs).ra;
+	half2 pixelUvs = PixelUV(localUvs);
+	half2 mg = tex2D(_MetallicGlossMap, pixelUvs).ra;
 	mg.r *= _Metallic;
 	mg.g *= _Glossiness;
 	return mg;
@@ -472,8 +475,9 @@ float3x3 Surface2WorldTranspose(float3 WorldUp, float3 surfaceNormal)
 }
 half3 WorldNormal(float2 localUvs, float3x3 Surface2WorldTranspose, float scale)
 {
-	//Grab & Scale Normal Map
-	float3 normalMap = UnpackNormal(tex2D(_BumpMap, localUvs));
+	//Grab & Scale Normal Map (using pixel mode UVs)
+	half2 pixelUvs = PixelUV(localUvs);
+	float3 normalMap = UnpackNormal(tex2D(_BumpMap, pixelUvs));
 	normalMap.z /= clamp(_BumpScale, 0.1, 4) * scale;
 	normalMap = normalize(normalMap);
 
@@ -485,8 +489,9 @@ half3 WorldNormal(float2 localUvs, float3x3 Surface2WorldTranspose, float scale)
 }
 half3 EmissionAlpha(float2 localUvs)
 {
+	half2 pixelUvs = PixelUV(localUvs);
 	half4 color = UNITY_ACCESS_INSTANCED_PROP(_EmissionColor_arr, _EmissionColor);
-	half4 Emission = tex2D(_EmissionMap, localUvs) * color;
+	half4 Emission = tex2D(_EmissionMap, pixelUvs) * color;
 	return Emission.rgb;
 }
 
